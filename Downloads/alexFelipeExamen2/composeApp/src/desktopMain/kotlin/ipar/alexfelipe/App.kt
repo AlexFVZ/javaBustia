@@ -2,8 +2,6 @@ package ipar.alexfelipe
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -12,10 +10,11 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 import alexfelipeexamen2.composeapp.generated.resources.Res
 import alexfelipeexamen2.composeapp.generated.resources.compose_multiplatform
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -43,17 +42,23 @@ fun App(sqlDriver: SqlDriver) {
         NavHost(controller, startDestination = HomeRoute) {
             composable<HomeRoute> { HomeScreen(controller) }
             composable<PreusRoute> { PreusRoute(controller) }
+            composable<> {  }
         }
     }
 }
-
+@Serializable
+object
 @Serializable
 object PreusRoute
 
 @Composable
 fun PreusRoute(controller: NavController){
-    Column {
+
+    Column ( horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxSize() ){
         Nav(controller)
+
     }
 }
 
@@ -62,14 +67,16 @@ object HomeRoute
 
 @Composable
 fun HomeScreen(controller: NavController){
-    Column {
+    Column ( horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(10.dp)){
         Nav(controller)
         Text("Configurar Preus")
         Button(onClick = { controller.navigate(PreusRoute) }) {
             Text("Preus")
         }
     }
-
 }
 
 fun insertDevelopmentData(db: Database) {
