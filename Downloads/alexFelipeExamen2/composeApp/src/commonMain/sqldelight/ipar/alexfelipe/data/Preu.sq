@@ -9,5 +9,8 @@ FOREIGN KEY (codiZona) REFERENCES Zona(codi)
 select:
 SELECT * FROM Preu;
 
-insert:
+insertAmbPreu:
 INSERT INTO Preu(preu,diaSessio,codiZona) VALUES (?,?,?);
+
+insertSensePreu:
+INSERT INTO Preu(diaSessio,codiZona) VALUES (?,?);

@@ -4,9 +4,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,6 +12,10 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 import alexfelipeexamen2.composeapp.generated.resources.Res
 import alexfelipeexamen2.composeapp.generated.resources.compose_multiplatform
+import androidx.compose.foundation.layout.Row
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -41,15 +42,34 @@ fun App(sqlDriver: SqlDriver) {
         val controller = rememberNavController()
         NavHost(controller, startDestination = HomeRoute) {
             composable<HomeRoute> { HomeScreen(controller) }
+            composable<PreusRoute> { PreusRoute(controller) }
         }
     }
 }
+
+@Serializable
+object PreusRoute
+
+@Composable
+fun PreusRoute(controller: NavController){
+    Column {
+        Nav(controller)
+    }
+}
+
 @Serializable
 object HomeRoute
 
 @Composable
 fun HomeScreen(controller: NavController){
-    Text("prueba")
+    Column {
+        Nav(controller)
+        Text("Configurar Preus")
+        Button(onClick = { controller.navigate(PreusRoute) }) {
+            Text("Preus")
+        }
+    }
+
 }
 
 fun insertDevelopmentData(db: Database) {
@@ -59,10 +79,10 @@ fun insertDevelopmentData(db: Database) {
     db.sessioQueries.insert("Dimarts",2)
     db.zonaQueries.insert("estandar")
     db.zonaQueries.insert("premium")
-    db.preuQueries.insert("3,99","Dilluns",1)
-    db.preuQueries.insert("5,99","Dilluns",2)
-    db.preuQueries.insert("2,99","Dimarts",1)
-    db.preuQueries.insert("4,99","Dimarts",1)
+    db.preuQueries.insertSensePreu("Dilluns",1)
+    db.preuQueries.insertSensePreu("Dilluns",2)
+    db.preuQueries.insertSensePreu("Dimarts",1)
+    db.preuQueries.insertSensePreu("Dimarts",1)
     db.butacaQueries.insert(1)
     db.butacaQueries.insert(1)
     db.butacaQueries.insert(1)
@@ -73,4 +93,15 @@ fun insertDevelopmentData(db: Database) {
     db.entradaQueries.insert("Dilluns",2)
     db.entradaQueries.insert("Dimarts",4)
     db.entradaQueries.insert("Dimarts",5)
+}
+@Composable
+fun Nav(controller: NavController) {
+    TopAppBar(
+        title = { Text("Gran teatre")},
+        actions = {
+            IconButton(onClick = { controller.navigate(HomeRoute) }) {
+                Icon(imageVector = Icons.Filled.Home, contentDescription = "Home")
+            }
+        }
+    )
 }
