@@ -25,6 +25,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import app.cash.sqldelight.db.SqlDriver
 import ipar.alexfelipe.data.Database
+import ipar.alexfelipe.data.Espectacle
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -71,7 +72,8 @@ object EspectacleRoute
 
 @Composable
 fun EspectacleScreen(controller: NavController,database: Database){
-    val espectacles = database.espectacleQueries.selectCodiNom().executeAsList()
+    val espectacles = database.espectacleQueries.select().executeAsList()
+    val espectacle= remember { mutableListOf(Espectacle(0,"","")) }
     val result= remember { mutableStateOf("") }
     Column ( horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -80,10 +82,25 @@ fun EspectacleScreen(controller: NavController,database: Database){
         Nav(controller)
         Text("A qui espectacle vols posarli preu?")
         LazyColumn {
-            items(espectacles) {espectacle -> Text(espectacle.codi.toString())}
-            items(espectacles) {espectacle -> Text(espectacle.nom)}
+            items(espectacles) {espectacle -> especView(espectacle)}
+        }
+        TextField(
+            value = espectacle.value.codi,
+            placeholder = { Text("codi") },
+            onValueChange = {espectacle.value = espectacle.value.copy(codi=it)}
+        )
+        Button(onClick = { controller.navigate(SessioRoutePreu) }) {
+            Text("")
         }
     }
+}
+@Composable
+fun especView(espectacle: Espectacle){
+    Row {
+        Text("codi"+espectacle.codi.toString()+"  ")
+        Text("nom"+espectacle.nom)
+    }
+
 }
 
 @Serializable
