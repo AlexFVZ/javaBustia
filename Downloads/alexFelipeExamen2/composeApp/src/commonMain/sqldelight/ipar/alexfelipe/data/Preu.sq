@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS Preu(
-preu INTEGER,
+preu TEXT,
 diaSessio TEXT,
 codiZona INTEGER,
 FOREIGN KEY (diaSessio) REFERENCES Sessio(dia),

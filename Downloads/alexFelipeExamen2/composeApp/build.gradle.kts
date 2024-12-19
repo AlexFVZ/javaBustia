@@ -28,6 +28,7 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtime.compose)
         }
         desktopMain.dependencies {
+            implementation("app.cash.sqldelight:sqlite-driver:2.0.2")
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
         }
