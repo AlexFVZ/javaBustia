@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS Preu(
+preu INTEGER,
+diaSessio TEXT,
+FOREIGN KEY (diaSessio) REFERENCES Sessio(dia)
+);

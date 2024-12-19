@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS Sessio(
+dia TEXT PRIMARY KEY,
+idEspectacle INTEGER,
+FOREIGN KEY (idEspectacle) REFERENCES Espectacle(codi)
+);
