@@ -60,7 +60,7 @@ data class SessioRoutePreu(val codi: Int)
 
 @Composable
 fun SessioScreenPreu(database: Database, controller: NavController, route: SessioRoutePreu) {
-    val sessions = database.sessioQueries.select().executeAsList()
+    val sessions = database.sessioQueries.selectByCodi(route.codi.toLong()).executeAsList()
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -71,6 +71,22 @@ fun SessioScreenPreu(database: Database, controller: NavController, route: Sessi
         Text("Quina sessio")
         LazyColumn {
             items(sessions) { sessio -> sessioView(sessio,route.codi) }
+        }
+        if (route.codi==1){
+            Button(onClick = { controller.navigate(PreusRoute("Dilluns")) }) {
+                Text("Dilluns")
+            }
+            Button(onClick = { controller.navigate(PreusRoute("Dijous")) }) {
+                Text("Dijous")
+            }
+        }
+        if (route.codi==2){
+            Button(onClick = { controller.navigate(PreusRoute("Dimarts")) }) {
+                Text("Dimarts")
+            }
+            Button(onClick = { controller.navigate(PreusRoute("Divendres")) }) {
+                Text("Divendres")
+            }
         }
     }
 }
@@ -114,14 +130,14 @@ fun EspectacleScreen(controller: NavController, database: Database) {
 @Composable
 fun especView(espectacle: Espectacle) {
     Row {
-        Text("codi" + espectacle.codi.toString() + "  ")
-        Text("nom" + espectacle.nom)
+        Text("codi: " + espectacle.codi.toString())
+        Text("  nom: " + espectacle.nom)
     }
 
 }
 
 @Serializable
-object PreusRoute
+data class PreusRoute(val dia:String)
 
 @Composable
 fun PreusScreen(controller: NavController, database: Database) {
@@ -165,10 +181,10 @@ fun insertDevelopmentData(db: Database) {
     db.sessioQueries.insert("Divendres", 2)
     db.zonaQueries.insert("estandar")
     db.zonaQueries.insert("premium")
-    db.preuQueries.insertSensePreu("Dilluns", 1)
-    db.preuQueries.insertSensePreu("Dilluns", 2)
-    db.preuQueries.insertSensePreu("Dimarts", 1)
-    db.preuQueries.insertSensePreu("Dimarts", 1)
+    db.preuQueries.insertSensePreu("Dilluns")
+    db.preuQueries.insertSensePreu("Dimarts")
+    db.preuQueries.insertSensePreu("Dijous")
+    db.preuQueries.insertSensePreu("Divendres")
     db.butacaQueries.insert(1)
     db.butacaQueries.insert(1)
     db.butacaQueries.insert(1)

@@ -6,6 +6,8 @@ FOREIGN KEY (codiEspectacle) REFERENCES Espectacle(codi)
 
 select:
 SELECT * FROM Sessio;
+selectByCodi:
+SELECT * FROM Sessio WHERE codiEspectacle=(?);
 
 insert:
 INSERT INTO Sessio(dia,codiEspectacle) VALUES (?,?);
