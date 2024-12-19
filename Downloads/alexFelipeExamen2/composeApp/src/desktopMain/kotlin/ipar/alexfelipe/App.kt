@@ -26,6 +26,7 @@ import androidx.navigation.toRoute
 import app.cash.sqldelight.db.SqlDriver
 import ipar.alexfelipe.data.Database
 import ipar.alexfelipe.data.Espectacle
+import ipar.alexfelipe.data.Sessio
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -45,60 +46,76 @@ fun App(sqlDriver: SqlDriver) {
     MaterialTheme {
         val controller = rememberNavController()
         NavHost(controller, startDestination = HomeRoute) {
-            composable<HomeRoute> { HomeScreen(controller,database) }
-            composable<PreusRoute> { PreusScreen(controller,database) }
-            composable<EspectacleRoute> { EspectacleScreen(controller,database) }
-            composable<SessioRoutePreu> { entry -> SessioScreenPreu(database,controller, entry.toRoute()) }
+            composable<HomeRoute> { HomeScreen(controller, database) }
+            composable<PreusRoute> { PreusScreen(controller, database) }
+            composable<EspectacleRoute> { EspectacleScreen(controller, database) }
+            composable<SessioRoutePreu> { entry -> SessioScreenPreu(database, controller, entry.toRoute()) }
 
         }
     }
 }
+
 @Serializable
-data class SessioRoutePreu(val codi:Int)
+data class SessioRoutePreu(val codi: Int)
 
 @Composable
-fun SessioScreenPreu(database: Database,controller: NavController,route:SessioRoutePreu){
-
-    Column ( horizontalAlignment = Alignment.CenterHorizontally,
+fun SessioScreenPreu(database: Database, controller: NavController, route: SessioRoutePreu) {
+    val sessions = database.sessioQueries.select().executeAsList()
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
-            .padding(10.dp)){
+            .padding(10.dp)
+    ) {
         Nav(controller)
-
+        Text("Quina sessio")
+        LazyColumn {
+            items(sessions) { sessio -> sessioView(sessio,route.codi) }
+        }
     }
 }
+
+@Composable
+fun sessioView(sessio: Sessio,codi:Int) {
+    Row {
+        Text("sessio: " + sessio.dia)
+    }
+}
+
 @Serializable
 object EspectacleRoute
 
 @Composable
-fun EspectacleScreen(controller: NavController,database: Database){
+fun EspectacleScreen(controller: NavController, database: Database) {
     val espectacles = database.espectacleQueries.select().executeAsList()
-    val espectacle= remember { mutableListOf(Espectacle(0,"","")) }
-    val result= remember { mutableStateOf("") }
-    Column ( horizontalAlignment = Alignment.CenterHorizontally,
+    val espectacle = remember { mutableListOf(Espectacle(0, "", "")) }
+    val result = remember { mutableStateOf("") }
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
-            .padding(10.dp)){
+            .padding(10.dp)
+    ) {
         Nav(controller)
         Text("A qui espectacle vols posarli preu?")
         LazyColumn {
-            items(espectacles) {espectacle -> especView(espectacle)}
+            items(espectacles) { espectacle -> especView(espectacle) }
         }
-        TextField(
-            value = espectacle.value.codi,
-            placeholder = { Text("codi") },
-            onValueChange = {espectacle.value = espectacle.value.copy(codi=it)}
-        )
-        Button(onClick = { controller.navigate(SessioRoutePreu) }) {
-            Text("")
+
+        Button(onClick = { controller.navigate(SessioRoutePreu(1)) }) {
+            Text("Las mariposas")
+        }
+        Button(onClick = { controller.navigate(SessioRoutePreu(2)) }) {
+            Text("Dolores")
         }
     }
 }
+
 @Composable
-fun especView(espectacle: Espectacle){
+fun especView(espectacle: Espectacle) {
     Row {
-        Text("codi"+espectacle.codi.toString()+"  ")
-        Text("nom"+espectacle.nom)
+        Text("codi" + espectacle.codi.toString() + "  ")
+        Text("nom" + espectacle.nom)
     }
 
 }
@@ -107,12 +124,14 @@ fun especView(espectacle: Espectacle){
 object PreusRoute
 
 @Composable
-fun PreusScreen(controller: NavController,database: Database){
+fun PreusScreen(controller: NavController, database: Database) {
 
-    Column ( horizontalAlignment = Alignment.CenterHorizontally,
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
-            .padding(10.dp)){
+            .padding(10.dp)
+    ) {
         Nav(controller)
 
     }
@@ -122,11 +141,13 @@ fun PreusScreen(controller: NavController,database: Database){
 object HomeRoute
 
 @Composable
-fun HomeScreen(controller: NavController,database: Database){
-    Column ( horizontalAlignment = Alignment.CenterHorizontally,
+fun HomeScreen(controller: NavController, database: Database) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
-            .padding(10.dp)){
+            .padding(10.dp)
+    ) {
         Nav(controller)
         Text("Configurar Preus")
         Button(onClick = { controller.navigate(EspectacleRoute) }) {
@@ -136,33 +157,34 @@ fun HomeScreen(controller: NavController,database: Database){
 }
 
 fun insertDevelopmentData(db: Database) {
-    db.espectacleQueries.insert("Les mariposes","obra de teatre alegre")
-    db.espectacleQueries.insert("Dolores","obra de teatre trist")
-    db.sessioQueries.insert("Dilluns",1)
-    db.sessioQueries.insert("Dimarts",2)
-    db.sessioQueries.insert("Dijous",1)
-    db.sessioQueries.insert("Divendres",2)
+    db.espectacleQueries.insert("Les mariposes", "obra de teatre alegre")
+    db.espectacleQueries.insert("Dolores", "obra de teatre trist")
+    db.sessioQueries.insert("Dilluns", 1)
+    db.sessioQueries.insert("Dimarts", 2)
+    db.sessioQueries.insert("Dijous", 1)
+    db.sessioQueries.insert("Divendres", 2)
     db.zonaQueries.insert("estandar")
     db.zonaQueries.insert("premium")
-    db.preuQueries.insertSensePreu("Dilluns",1)
-    db.preuQueries.insertSensePreu("Dilluns",2)
-    db.preuQueries.insertSensePreu("Dimarts",1)
-    db.preuQueries.insertSensePreu("Dimarts",1)
+    db.preuQueries.insertSensePreu("Dilluns", 1)
+    db.preuQueries.insertSensePreu("Dilluns", 2)
+    db.preuQueries.insertSensePreu("Dimarts", 1)
+    db.preuQueries.insertSensePreu("Dimarts", 1)
     db.butacaQueries.insert(1)
     db.butacaQueries.insert(1)
     db.butacaQueries.insert(1)
     db.butacaQueries.insert(2)
     db.butacaQueries.insert(2)
     db.butacaQueries.insert(2)
-    db.entradaQueries.insert("Dilluns",1)
-    db.entradaQueries.insert("Dilluns",2)
-    db.entradaQueries.insert("Dimarts",4)
-    db.entradaQueries.insert("Dimarts",5)
+    db.entradaQueries.insert("Dilluns", 1)
+    db.entradaQueries.insert("Dilluns", 2)
+    db.entradaQueries.insert("Dimarts", 4)
+    db.entradaQueries.insert("Dimarts", 5)
 }
+
 @Composable
 fun Nav(controller: NavController) {
     TopAppBar(
-        title = { Text("Gran teatre")},
+        title = { Text("Gran teatre") },
         actions = {
             IconButton(onClick = { controller.navigate(HomeRoute) }) {
                 Icon(imageVector = Icons.Filled.Home, contentDescription = "Home")
