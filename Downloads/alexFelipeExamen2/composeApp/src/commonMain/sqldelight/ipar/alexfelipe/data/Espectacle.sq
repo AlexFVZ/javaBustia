@@ -6,5 +6,8 @@ descripcio TEXT NOT NULL
 select:
 SELECT * FROM Espectacle;
 
+selectCodiNom:
+SELECT codi,nom FROM Espectacle;
+
 insert:
 INSERT INTO Espectacle(nom,descripcio) VALUES (?,?);
