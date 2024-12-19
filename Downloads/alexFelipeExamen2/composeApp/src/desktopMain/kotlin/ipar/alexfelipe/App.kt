@@ -26,6 +26,7 @@ import androidx.navigation.toRoute
 import app.cash.sqldelight.db.SqlDriver
 import ipar.alexfelipe.data.Database
 import ipar.alexfelipe.data.Espectacle
+import ipar.alexfelipe.data.Preu
 import ipar.alexfelipe.data.Sessio
 import kotlinx.serialization.Serializable
 
@@ -47,10 +48,32 @@ fun App(sqlDriver: SqlDriver) {
         val controller = rememberNavController()
         NavHost(controller, startDestination = HomeRoute) {
             composable<HomeRoute> { HomeScreen(controller, database) }
-            composable<PreusRoute> { PreusScreen(controller, database) }
+            composable<PreusRoute> { entry -> PreusScreen(controller, database, entry.toRoute()) }
             composable<EspectacleRoute> { EspectacleScreen(controller, database) }
             composable<SessioRoutePreu> { entry -> SessioScreenPreu(database, controller, entry.toRoute()) }
+            composable<resulRoute> { entry -> resultSreen(controller,database, entry.toRoute()) }
 
+        }
+    }
+}
+
+@Serializable
+data class resulRoute(val dia: String,val preu:String)
+
+@Composable
+fun resultSreen(controller: NavController, database: Database,route: resulRoute) {
+    val resultat = database.preuQueries.selectByDiaAndPreu(route.dia,route.preu).executeAsOne()
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(10.dp)
+    ) {
+        Nav(controller)
+        Text("Preu configurat")
+        Text(resultat.toString())
+        Button(onClick = { controller.navigate(HomeRoute) }) {
+            Text("Menu principal")
         }
     }
 }
@@ -70,9 +93,9 @@ fun SessioScreenPreu(database: Database, controller: NavController, route: Sessi
         Nav(controller)
         Text("Quina sessio")
         LazyColumn {
-            items(sessions) { sessio -> sessioView(sessio,route.codi) }
+            items(sessions) { sessio -> sessioView(sessio, route.codi) }
         }
-        if (route.codi==1){
+        if (route.codi == 1) {
             Button(onClick = { controller.navigate(PreusRoute("Dilluns")) }) {
                 Text("Dilluns")
             }
@@ -80,7 +103,7 @@ fun SessioScreenPreu(database: Database, controller: NavController, route: Sessi
                 Text("Dijous")
             }
         }
-        if (route.codi==2){
+        if (route.codi == 2) {
             Button(onClick = { controller.navigate(PreusRoute("Dimarts")) }) {
                 Text("Dimarts")
             }
@@ -92,7 +115,7 @@ fun SessioScreenPreu(database: Database, controller: NavController, route: Sessi
 }
 
 @Composable
-fun sessioView(sessio: Sessio,codi:Int) {
+fun sessioView(sessio: Sessio, codi: Int) {
     Row {
         Text("sessio: " + sessio.dia)
     }
@@ -137,11 +160,10 @@ fun especView(espectacle: Espectacle) {
 }
 
 @Serializable
-data class PreusRoute(val dia:String)
+data class PreusRoute(val dia: String)
 
 @Composable
-fun PreusScreen(controller: NavController, database: Database) {
-
+fun PreusScreen(controller: NavController, database: Database, route: PreusRoute) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -149,7 +171,15 @@ fun PreusScreen(controller: NavController, database: Database) {
             .padding(10.dp)
     ) {
         Nav(controller)
-
+        Text("Que preus vols posar:")
+        Button(onClick = { controller.navigate(resulRoute(route.dia,"3,99")) }) {
+            Text("3,99")
+            database.preuQueries.insertAmbPreu("3,99", route.dia)
+        }
+        Button(onClick = { controller.navigate(resulRoute(route.dia,"5,99")) }) {
+            Text("5,99")
+            database.preuQueries.insertAmbPreu("5,99", route.dia)
+        }
     }
 }
 
@@ -167,7 +197,7 @@ fun HomeScreen(controller: NavController, database: Database) {
         Nav(controller)
         Text("Configurar Preus")
         Button(onClick = { controller.navigate(EspectacleRoute) }) {
-            Text("")
+            Text("Configurar")
         }
     }
 }

@@ -12,3 +12,6 @@ INSERT INTO Preu(preu,diaSessio) VALUES (?,?);
 
 insertSensePreu:
 INSERT INTO Preu(diaSessio) VALUES (?);
+
+selectByDiaAndPreu:
+SELECT * FROM Preu WHERE diaSessio=(?) AND preu = (?);
