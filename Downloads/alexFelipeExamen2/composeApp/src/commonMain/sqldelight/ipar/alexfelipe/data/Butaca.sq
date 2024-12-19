@@ -1,0 +1,11 @@
+CREATE TABLE IF NOT EXISTS Butaca(
+numero INTEGER PRIMARY KEY AUTOINCREMENT ,
+codiZona INTEGER,
+FOREIGN KEY (codiZona) REFERENCES Zona(codi)
+);
+
+select:
+SELECT * FROM Butaca;
+
+insert:
+INSERT INTO Butaca(codiZona) VALUES (?);

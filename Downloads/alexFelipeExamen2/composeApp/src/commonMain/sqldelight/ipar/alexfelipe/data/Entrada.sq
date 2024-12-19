@@ -1,5 +1,12 @@
 CREATE TABLE IF NOT EXISTS Entrada(
 diaSessio TEXT,
-
-FOREIGN KEY (diaSessio) REFERENCES Sessio(dia)
+numeroButaca INTEGER,
+FOREIGN KEY (diaSessio) REFERENCES Sessio(dia),
+FOREIGN KEY (numeroButaca) REFERENCES Butaca(numero)
 );
+
+select:
+SELECT * FROM Entrada;
+
+insert:
+INSERT INTO Entrada(diaSessio,numeroButaca) VALUES (?,?);

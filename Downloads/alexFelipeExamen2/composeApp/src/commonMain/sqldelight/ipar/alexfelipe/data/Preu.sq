@@ -1,5 +1,13 @@
 CREATE TABLE IF NOT EXISTS Preu(
 preu INTEGER,
 diaSessio TEXT,
-FOREIGN KEY (diaSessio) REFERENCES Sessio(dia)
+codiZona INTEGER,
+FOREIGN KEY (diaSessio) REFERENCES Sessio(dia),
+FOREIGN KEY (codiZona) REFERENCES Zona(codi)
 );
+
+select:
+SELECT * FROM Preu;
+
+insert:
+INSERT INTO Preu(preu,diaSessio,codiZona) VALUES (?,?,?);

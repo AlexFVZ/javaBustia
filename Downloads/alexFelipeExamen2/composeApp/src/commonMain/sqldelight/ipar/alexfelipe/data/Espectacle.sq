@@ -1,5 +1,10 @@
 CREATE TABLE IF NOT EXISTS Espectacle (
-codi INTEGER PRIMARY KEY,
+codi INTEGER PRIMARY KEY AUTOINCREMENT ,
 nom TEXT NOT NULL,
 descripcio TEXT NOT NULL
 );
+select:
+SELECT * FROM Espectacle;
+
+insert:
+INSERT INTO Espectacle(nom,descripcio) VALUES (?,?);

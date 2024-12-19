@@ -1,5 +1,11 @@
 CREATE TABLE IF NOT EXISTS Sessio(
 dia TEXT PRIMARY KEY,
-idEspectacle INTEGER,
-FOREIGN KEY (idEspectacle) REFERENCES Espectacle(codi)
+codiEspectacle INTEGER,
+FOREIGN KEY (codiEspectacle) REFERENCES Espectacle(codi)
 );
+
+select:
+SELECT * FROM Sessio;
+
+insert:
+INSERT INTO Sessio(dia,codiEspectacle) VALUES (?,?);
