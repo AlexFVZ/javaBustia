@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_videoclub_film_admin,Accés d'administració a pelicules de Videoclub,model_videoclub_film_category,base.group_user,1,1,1,1
+access_videoclub_director_admin,Accés d'administració a Directors de pelicules de Videoclub,model_videoclub_director_category,base.group_user,1,1,1,1
+access_videoclub_state_admin,Accés d'administració al estat de les pelicules de Videoclub,model_videoclub_state_category,base.group_user,1,1,1,1
